@@ -1,18 +1,24 @@
 const express = require('express');
+const bodyParser = require("body-parser");
 
-const bookRouter = require('./routes/book');
 const errorMiddleware = require('./middleware/error');
- 
+const PORT = process.env.PORT || 3000;
+const indexRouter = require('./routes/index');
+const bookApiRouter = require('./routes/api/book');
+const bookRouter = require('./routes/book');
+
 const app = express();
-app.use('/api/book', bookRouter);
+
 app.use(express.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.set("view engine", "ejs");
 
-
-app.post('/api/user/login', (req, res) => {
-    res.status(201);
-    res.json({ id: 1, mail: "test@mail.ru" });
-});
+app.use('/', indexRouter);
+app.use('/book', bookRouter);
+app.use('/api/book', bookApiRouter);
 
 app.use(errorMiddleware);
 
-app.listen(3000);
+app.listen(PORT, () => {
+    console.log(`=== start server PORT ${PORT} ===`);
+});
