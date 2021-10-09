@@ -40,11 +40,17 @@ router.get('/:id', (req, res) => {
     const {book} = store;
     const {id} = req.params;
     const idx = book.findIndex(el => el.id === id);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `http://counter:3002/counter/:${id}/incr`, false);
+    xhr.send();
+
+
 
     if (idx !== -1) {
         res.render("book/view", {
             title: "Обзор",
             book: book[idx],
+            bookID: id
         });
     } else {
         res.status(404).redirect('/404');

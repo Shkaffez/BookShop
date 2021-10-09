@@ -1,0 +1,20 @@
+services: 
+  redis:
+    image: redis
+    volumes: 
+      - ./redisStorage:/var/log    
+  counter: 
+    build: ./Counter    
+    ports: 
+      - 80:3002
+    environment:
+      - PORT=3002
+      - REDIS_URL=redis
+    links: 
+      - redis
+  bookshop: 
+    build: ./BookShop    
+    ports:
+      - 80:3000
+    environment:
+      - PORT=3000

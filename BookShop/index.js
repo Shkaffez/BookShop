@@ -20,5 +20,5 @@ app.use('/api/book', bookApiRouter);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => {
-    console.log(`=== start server PORT ${PORT} ===`);
+    console.log(`=== start server BookShop PORT ${PORT} ===`);
 });
