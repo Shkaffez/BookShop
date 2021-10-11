@@ -1,6 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const {Book} = require('../models');
+
+
+
+async function getCounter (id) {
+    try {
+        const {data} = await axios.get(`counter:3000/counter/${id}`);
+        return data.counter;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
 
 const store = {
     book: [],
@@ -39,22 +52,22 @@ router.post('/create', (req, res) => {
 router.get('/:id', (req, res) => {
     const {book} = store;
     const {id} = req.params;
-    const idx = book.findIndex(el => el.id === id);
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', `http://counter:3002/counter/:${id}/incr`, false);
-    xhr.send();
-
-
-
-    if (idx !== -1) {
-        res.render("book/view", {
-            title: "Обзор",
-            book: book[idx],
-            bookID: id
-        });
-    } else {
-        res.status(404).redirect('/404');
-    }
+    const idx = book.findIndex(el => el.id === id);     
+    axios.post(`counter:3000/counter/${id}/incr`)
+        .then( response => {            c
+            const count = response.data.counter;
+            if (idx !== -1) {
+                res.render("book/view", {
+                    title: "Обзор",
+                    book: book[idx],
+                    count: count
+                });
+                return
+            } else {
+                res.status(404).redirect('/404');
+                return
+            }
+        });    
 });
 
 router.get('/update/:id', (req, res) => {
