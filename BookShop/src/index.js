@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 
 const errorMiddleware = require('./middleware/error');
 const PORT = process.env.PORT || 3000;
+
+
 const indexRouter = require('./routes/index');
 const bookApiRouter = require('./routes/api/book');
 const bookRouter = require('./routes/book');
@@ -11,6 +13,8 @@ const app = express();
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+app.set('views', './src/views');
 app.set("view engine", "ejs");
 
 app.use('/', indexRouter);

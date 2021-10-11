@@ -2,8 +2,11 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY ./ ./
+COPY ./package*.json ./
 RUN npm install
+COPY src/ ./src
 
-CMD ["npm", "run", "dev"]
+EXPOSE 3000
+
+CMD ["npm", "start"]
 
