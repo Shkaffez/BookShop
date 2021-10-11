@@ -10,10 +10,7 @@
                 <h5 class="card-title">Название: <%= book.title %></h5>
                 <p class="card-text">Описание: <%= book.description %></p>
                 <p class="card-text">Авторы: <%= book.authors %></p>
-                <% const xhr = new XMLHttpRequest(); %>
-                xhr.open('GET', `http://counter:3002/counter/:${bookID}`, false);
-                xhr.send(); 
-                <% const count = xhr.responseText %>
+                
                 <p class="card-text">Количество просмотров: <%= count %></p>
                 
                 <div class="text-right">

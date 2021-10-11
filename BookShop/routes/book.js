@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const router = express.Router();
 const {Book} = require('../models');
 
@@ -40,17 +41,18 @@ router.get('/:id', (req, res) => {
     const {book} = store;
     const {id} = req.params;
     const idx = book.findIndex(el => el.id === id);
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', `http://counter:3002/counter/:${id}/incr`, false);
-    xhr.send();
 
-
+    axios.post(`http://counter:3002//counter/:${id}/incr`);
+    const getCount = async () => {
+        return await axios.get(`http://counter:3002//counter/:${id}`)}
+    let count = getCount();
+    
 
     if (idx !== -1) {
         res.render("book/view", {
             title: "Обзор",
             book: book[idx],
-            bookID: id
+            count: count
         });
     } else {
         res.status(404).redirect('/404');
