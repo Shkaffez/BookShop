@@ -10,14 +10,14 @@ const app = express();
 app.use(express.json());
 
 app.post('/counter/:bookId/incr', (req, res) => {
-    const {bookId} = req.params;
-
+    console.log(req.headers)
+    const {bookId} = req.params;    
     client.incr(bookId, (err, rep) => {
         if(err) {
             res.status(500).json({error: 'Redis error'});
             return;
-        }
-        res.json({ counter: rep });        
+        }        
+        res.status(202).json({ counter: rep });        
     });
 });
 

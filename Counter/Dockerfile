@@ -1,10 +1,10 @@
 FROM node:latest
 
-WORKDIR /app
+WORKDIR /var/www
 
-COPY ./package*.json ./
+COPY ./package*.json /var/www/
 RUN npm install
-COPY src/ ./src
+COPY . /var/www/
 
 EXPOSE 3000
 

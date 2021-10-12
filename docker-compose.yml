@@ -2,19 +2,25 @@ services:
   redis:
     image: redis
     volumes: 
-      - ./redisStorage:/var/log    
+      - redisStorage:/data    
   counter: 
-    build: ./Counter    
+    build: ./Counter
+    volumes:
+      - ./Counter/src://var/www/src
     ports: 
-      - 80:3002
+      - 5000:3002
     environment:
       - PORT=3002
       - REDIS_URL=redis
     links: 
       - redis
   bookshop: 
-    build: ./BookShop    
+    build: ./BookShop
+    volumes:
+      - ./BookShop/src://var/www/src
     ports:
       - 80:3000
     environment:
       - PORT=3000
+volumes:
+  redisStorage:

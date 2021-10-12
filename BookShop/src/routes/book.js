@@ -53,9 +53,10 @@ router.get('/:id', (req, res) => {
     const {book} = store;
     const {id} = req.params;
     const idx = book.findIndex(el => el.id === id);     
-    axios.post(`counter:3000/counter/${id}/incr`)
-        .then( response => {            c
+    axios.post(`localhost:3002/counter/${id}/incr`)
+        .then( response => {            
             const count = response.data.counter;
+            console.log(count);
             if (idx !== -1) {
                 res.render("book/view", {
                     title: "Обзор",
