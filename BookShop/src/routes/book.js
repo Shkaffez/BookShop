@@ -1,19 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
 const {Book} = require('../models');
+const needle = require('needle');
 
-
-
-async function getCounter (id) {
-    try {
-        const {data} = await axios.get(`counter:3000/counter/${id}`);
-        return data.counter;
-    } catch (e) {
-        console.error(e);
-        return false;
-    }
-}
+const COUNTER_HOST = process.env.COUNTER_HOST || 'counter';
+const COUNTER_PORT = process.env.COUNTER_PORT || 3002;
 
 const store = {
     book: [],
@@ -49,26 +40,28 @@ router.post('/create', (req, res) => {
     res.redirect('/book')
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res) => {    
     const {book} = store;
     const {id} = req.params;
     const idx = book.findIndex(el => el.id === id);     
-    axios.post(`localhost:3002/counter/${id}/incr`)
-        .then( response => {            
-            const count = response.data.counter;
-            console.log(count);
-            if (idx !== -1) {
-                res.render("book/view", {
-                    title: "Обзор",
-                    book: book[idx],
-                    count: count
-                });
-                return
-            } else {
-                res.status(404).redirect('/404');
-                return
-            }
-        });    
+
+    needle('post', `${COUNTER_HOST}:${COUNTER_PORT}/counter/${id}/incr`, {json: true})
+    .then(response => {            
+        const count = response.body.counter;        
+        if (idx !== -1) {
+            res.render("book/view", {
+                title: "Обзор",
+                book: book[idx],
+                count: count
+            });
+            return;
+        } else {
+            res.status(404).redirect('/404');
+            return;
+        }
+    }).catch((err) => {
+        console.error(err);
+    });
 });
 
 router.get('/update/:id', (req, res) => {

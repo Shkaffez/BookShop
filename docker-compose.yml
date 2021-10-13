@@ -22,5 +22,9 @@ services:
       - 80:3000
     environment:
       - PORT=3000
+      - COUNTER_HOST=counter
+      - COUNTER_PORT=3002
+    links:
+      - counter
 volumes:
   redisStorage:

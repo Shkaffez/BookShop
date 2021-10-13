@@ -9,8 +9,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/counter/:bookId/incr', (req, res) => {
-    console.log(req.headers)
+app.post('/counter/:bookId/incr', (req, res) => {    
     const {bookId} = req.params;    
     client.incr(bookId, (err, rep) => {
         if(err) {
@@ -21,7 +20,7 @@ app.post('/counter/:bookId/incr', (req, res) => {
     });
 });
 
-app.get('/counter/:bookId', (req, res) => {
+app.get('/counter/:bookId', (req, res) => {    
     const {bookId} = req.params;
     client.get(bookId, (err, rep) => {
         if(err) {
