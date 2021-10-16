@@ -1,4 +1,29 @@
 services: 
+  mongodb:
+      image: mongo:5.0.3
+      restart: always
+      expose:
+        - 27017
+      volumes: 
+      - mongoStorage:/data
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME:-root}
+        - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD:-password}
+        - MONGO_INITDB_DATABASE=${DB_NAME:-books_database}
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${DB_USERNAME:-root}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${DB_PASSWORD:-password}
+    depends_on:
+      - mongodb
+
+
   redis:
     image: redis
     volumes: 
@@ -14,6 +39,7 @@ services:
       - REDIS_URL=redis
     links: 
       - redis
+
   bookshop: 
     build: ./BookShop
     volumes:
@@ -24,7 +50,15 @@ services:
       - PORT=3000
       - COUNTER_HOST=counter
       - COUNTER_PORT=3002
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_NAME=${DB_NAME:-books_database}
+      - DB_HOST=mongodb://mongodb:27017
     links:
       - counter
+    depends_on:
+      - mongodb
+
 volumes:
   redisStorage:
+  mongoStorage:
