@@ -54,6 +54,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-password}
       - DB_NAME=${DB_NAME:-books_database}
       - DB_HOST=mongodb://mongodb:27017
+      - COOKIE_SECRET="some secret"
     links:
       - counter
     depends_on:

@@ -1,0 +1,15 @@
+<%- include("../partials/layout-start", {title: title}) %>
+<%- include("../partials/menu") %>
+<h1><%= title %></h1>
+
+<div class="row">
+    <div class="col-sm-6">
+
+        <a class="btn btn-primary" href="/user/login" role="button">Sign in</a>
+
+        <a class="btn btn-primary" href="/user/signup" role="button">Sign up</a>
+
+    </div>
+</div>
+
+<%- include("../partials/layout-end") %>
