@@ -1,10 +1,13 @@
 const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('./models/User');
+const Book = require('./models/Book');
 const errorMiddleware = require('./middleware/error');
 const checkAuthMiddleware = require('./middleware/checkAuth');
 
@@ -48,6 +51,8 @@ passport.deserializeUser(function (id, cb) {
 });
 
 const app = express();
+const server = http.Server(app);
+const io = socketIO(server);
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -69,6 +74,30 @@ app.use('/book', checkAuthMiddleware, bookRouter);
 app.use('/user', userRouter);
 app.use('/api/book', bookApiRouter);
 
+io.on('connection', async (socket) => {
+    const {id} = socket;    
+    console.log(`Socket connected: ${id}`);    
+    const {roomName} = socket.handshake.query;
+    console.log(`Socket roomName: ${roomName}`);    
+    
+    socket.join(roomName);
+    const comments = await Book.findById(roomName).select('comments');
+    socket.emit('commentsHistory', comments);
+    
+    socket.on('sendComment', async (msg) => { 
+        const book = await Book.findById(roomName);
+        book.comments.push(msg);
+        await book.save();         
+        socket.to(roomName).emit('sendComment', msg);
+        socket.emit('sendComment', msg); 
+    });
+    
+    socket.on('disconnect', () => {
+        console.log(`Socket disconnected: ${id}`);
+    });
+});
+
+
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
@@ -88,7 +117,7 @@ async function start() {
             useUnifiedTopology: true
         });
 
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         })
     } catch (e) {

@@ -59,6 +59,7 @@ router.get('/:id', async (req, res) => {
         const count = counterResponse.body.counter;
         res.render("book/view", {
             title: "Обзор",
+            user: req.user,
             book: book,
             count: count
         });

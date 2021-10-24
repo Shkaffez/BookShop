@@ -1,5 +1,10 @@
 const {Schema, model} = require('mongoose');
 
+const commentSchema = new Schema({
+    username: String,     
+    text: String
+});
+
 const bookSchema = new Schema({
     title: {
         type: String,
@@ -24,7 +29,8 @@ const bookSchema = new Schema({
     fileName: {
         type: String,
         default: ""
-    }
+    },
+    comments: [commentSchema]
 });
 
 

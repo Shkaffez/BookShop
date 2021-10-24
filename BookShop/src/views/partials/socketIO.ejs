@@ -1,0 +1,67 @@
+<script src="/socket.io/socket.io.js"></script>
+<div class="container">
+
+    <div class="row">
+        <div class="col-4">
+            <p></p>
+            <h4>Комментарии</h4>
+            <div id="list" class="list-group">
+            
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">            
+            <div class="form-group">
+                <label for="text">Ваш комментарий</label>
+                <input id="username" class="form-control" value= <%= user.username %> type="hidden">
+                <textarea placeholder="комментарий" class="form-control" id="text"></textarea>
+            </div>
+            <button type="submit" id="send" class="btn btn-primary">отправить</button>
+            
+        </div>
+    </div>
+
+</div>
+<script>
+    const roomName = location.pathname.split('/').pop();
+    const socket = io.connect('/', {query: `roomName=${roomName}`});
+    const boxList = document.querySelector('#list');
+    const inputText = document.querySelector('#text');
+    const username = document.querySelector('#username');
+    const send = document.querySelector('#send');
+    
+    
+    const getTmp = (msg) => {
+        return `
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <small>${msg.username}</small>
+                    </div>
+                    <p class="mb-1">${msg.text}</p>
+                </div>
+        `;
+    };
+
+    socket.on('sendComment', (msg) => {
+        const div = getTmp(msg);
+        boxList.insertAdjacentHTML('beforeend', div);
+    });
+
+    socket.on('commentsHistory', (comments) => {        
+        comments.comments.forEach((comment) => {            
+            const div = getTmp(comment);
+            boxList.insertAdjacentHTML('beforeend', div);
+        })
+    });
+
+    send.addEventListener('click', () => {
+        socket.emit('sendComment', {  
+            username: username.value,     
+            text: inputText.value,
+        });
+        inputText.value = "";
+    });
+
+</script>
