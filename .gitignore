@@ -104,4 +104,4 @@ dist
 .tern-port
 
 node-modules
-ideas.md
+tsconfig.json
