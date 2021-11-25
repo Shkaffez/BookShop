@@ -10,15 +10,15 @@ type BookType = {
 }
 
 interface IBookRepository {
-  (book: BookType): Promise<void>,
-  (id: string): Promise<void | BookType>,
-  (): Promise<Array<BookType> | void>,
-  (id: string, book: BookType): Promise<void | BookType>,
-  (id: string): Promise<void>,
+  createBook(book: BookType): Promise<void>;
+  getBook(id: string): Promise<void | BookType>;
+  getBooks(): Promise<Array<BookType> | void>;
+  updateBook(id: string, book: BookType): Promise<void | BookType>;
+  deleteBook(id: string): Promise<void>;
 }
 
 class BooksRepository implements IBookRepository {
-  static async createBook(book: BookType): Promise<void> {
+  async createBook(book: BookType): Promise<void> {
     const newbook = new Book({ book });
     try {
       await newbook.save();
@@ -28,7 +28,7 @@ class BooksRepository implements IBookRepository {
     }
   }
 
-  static async getBook(id: string): Promise<void | BookType> {
+  async getBook(id: string): Promise<void | BookType> {
     try {
       const book = await Book.findById(id).select('-__v');
       return book;
@@ -37,7 +37,7 @@ class BooksRepository implements IBookRepository {
     }
   }
 
-  static async getBooks(): Promise<Array<BookType> | void> {
+  async getBooks(): Promise<Array<BookType> | void> {
     try {
       const books = await Book.find().select('-__v');
       return books;
@@ -46,7 +46,7 @@ class BooksRepository implements IBookRepository {
     }
   }
 
-  static async updateBook(id: string, book: BookType): Promise<void | BookType> {
+  async updateBook(id: string, book: BookType): Promise<void | BookType> {
     try {
       await Book.findByIdAndUpdate(id, { book });
       return book;
@@ -55,7 +55,7 @@ class BooksRepository implements IBookRepository {
     }
   }
 
-  static async deleteBook(id: string): Promise<void> {
+  async deleteBook(id: string): Promise<void> {
     try {
       await Book.deleteOne({ _id: id });
     } catch (e) {
