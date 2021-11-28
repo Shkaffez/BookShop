@@ -1,15 +1,15 @@
-services: 
+services:
   mongodb:
-      image: mongo:5.0.3
-      restart: always
-      expose:
-        - 27017
-      volumes: 
+    image: mongo:5.0.3
+    restart: always
+    expose:
+      - 27017
+    volumes:
       - mongoStorage:/data
-      environment:
-        - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME:-root}
-        - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD:-password}
-        - MONGO_INITDB_DATABASE=${DB_NAME:-books_database}
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME:-root}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD:-password}
+      - MONGO_INITDB_DATABASE=${DB_NAME:-books_database}
 
   mongo-express:
     image: mongo-express
@@ -23,27 +23,26 @@ services:
     depends_on:
       - mongodb
 
-
   redis:
     image: redis
-    volumes: 
-      - redisStorage:/data    
-  counter: 
+    volumes:
+      - redisStorage:/data
+  counter:
     build: ./Counter
     volumes:
-      - ./Counter/src://var/www/src
-    ports: 
+      - ./Counter/src:/var/www/src
+    ports:
       - 5000:3002
     environment:
       - PORT=3002
       - REDIS_URL=redis
-    links: 
+    links:
       - redis
 
-  bookshop: 
+  bookshop:
     build: ./BookShop
     volumes:
-      - ./BookShop/src://var/www/src
+      - ./BookShop/src:/var/www/src
     ports:
       - 80:3000
     environment:
@@ -61,5 +60,5 @@ services:
       - mongodb
 
 volumes:
-  redisStorage:
-  mongoStorage:
+  redisStorage: null
+  mongoStorage: null

@@ -1,37 +1,37 @@
-services: 
-  
+services:
+
   redis:
     image: redis
-    volumes: 
-      - redisStorage:/data    
-  counter: 
+    volumes:
+      - redisStorage:/data
+  counter:
     build: ./Counter
     volumes:
       - ./Counter/src://var/www/src
-    ports: 
+    ports:
       - 5000:3002
     environment:
       - PORT=3002
       - REDIS_URL=redis
-    links: 
+    links:
       - redis
 
-  bookshop: 
+  bookshop:
     build: ./BookShop
     volumes:
-      - ./BookShop/src://var/www/src
+      - ./BookShop/src:/var/www/src
     ports:
       - 80:3000
     environment:
       - PORT=3000
       - COUNTER_HOST=counter
-      - COUNTER_PORT=3002            
+      - COUNTER_PORT=3002
       - DB_NAME=${DB_NAME:-books_database}
       - COOKIE_SECRET="some secret"
     env_file:
-      - ./BookShop/.atlas.env    
+      - ./BookShop/.atlas.env
     links:
       - counter
-    
+
 volumes:
-  redisStorage:
+  redisStorage: null

@@ -1,7 +1,9 @@
 const express = require('express');
+const needle = require('needle');
+const container = require('../container');
 
 const router = express.Router();
-const needle = require('needle');
+const BooksRepository = require('../services/BooksRepository');
 const Book = require('../models/Book');
 
 const COUNTER_HOST = process.env.COUNTER_HOST || 'counter';
@@ -53,7 +55,10 @@ router.post('/create', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const book = await Book.findById(id).select('-__v');
+    // const book = await Book.findById(id).select('-__v');
+    const repo = container.get(BooksRepository);
+    const book = await repo.getBook(id);
+
     const counterResponse = await needle('post', `${COUNTER_HOST}:${COUNTER_PORT}/counter/${id}/incr`, { json: true });
     const count = counterResponse.body.counter;
     res.render('book/view', {

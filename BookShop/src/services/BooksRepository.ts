@@ -1,3 +1,5 @@
+const { injectable } = require('inversify');
+
 const Book = require('../models/Book');
 
 type BookType = {
@@ -17,6 +19,7 @@ interface IBookRepository {
   deleteBook(id: string): Promise<void>;
 }
 
+@injectable()
 class BooksRepository implements IBookRepository {
   async createBook(book: BookType): Promise<void> {
     const newbook = new Book({ book });
