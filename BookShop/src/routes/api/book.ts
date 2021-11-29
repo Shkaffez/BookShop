@@ -1,14 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
-const Book = require('../../models/Book');
+const Book = require('../../models/BookModel');
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: any, res: any) => {
   const books = await Book.find().select('-__v');
   res.json(books);
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: any, res: any) => {
   const { id } = req.params;
 
   try {
@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req: any, res: any) => {
   const {
     title,
     description,
@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req: any, res: any) => {
   const {
     title,
     description,
@@ -80,7 +80,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req: any, res: any) => {
   const { id } = req.params;
   try {
     await Book.deleteOne({ _id: id });
@@ -91,4 +91,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

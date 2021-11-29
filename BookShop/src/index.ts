@@ -1,25 +1,25 @@
-require('reflect-metadata');
+import 'reflect-metadata';
 
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+import express from 'express';
+import http from 'http';
+import socketIO from 'socket.io';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
-const User = require('./models/User');
-const Book = require('./models/Book');
-const errorMiddleware = require('./middleware/error');
-const checkAuthMiddleware = require('./middleware/checkAuth');
+import User from './models/UserModel';
+import Book from './models/BookModel';
+import errorMiddleware from './middleware/error';
+import checkAuthMiddleware from './middleware/checkAuth';
 
-const indexRouter = require('./routes/index');
-const bookApiRouter = require('./routes/api/book');
-const bookRouter = require('./routes/book');
-const userRouter = require('./routes/users');
+import indexRouter from './routes/index';
+import bookApiRouter from './routes/api/book';
+import bookRouter from './routes/book';
+import userRouter from './routes/users';
 
-function verify(username, password, done) {
-  User.findOne({ username }, (err, user) => {
+function verify(username: any, password: any, done: any) {
+  User.findOne({ username }, (err: any, user: any) => {
     if (err) { return done(err); }
     if (!user) {
       return done(null, false, { message: 'Incorrect username.' });
@@ -74,7 +74,7 @@ app.use('/book', checkAuthMiddleware, bookRouter);
 app.use('/user', userRouter);
 app.use('/api/book', bookApiRouter);
 
-io.on('connection', async (socket) => {
+io.on('connection', async (socket: any) => {
   const { id } = socket;
   console.log(`Socket connected: ${id}`);
   const { roomName } = socket.handshake.query;
@@ -84,7 +84,7 @@ io.on('connection', async (socket) => {
   const comments = await Book.findById(roomName).select('comments');
   socket.emit('commentsHistory', comments);
 
-  socket.on('sendComment', async (msg) => {
+  socket.on('sendComment', async (msg: any) => {
     const book = await Book.findById(roomName);
     book.comments.push(msg);
     await book.save();

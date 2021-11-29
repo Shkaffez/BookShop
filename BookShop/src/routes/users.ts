@@ -1,17 +1,17 @@
-const express = require('express');
-const passport = require('passport');
+import express from 'express';
+import passport from 'passport';
+import User from '../models/UserModel';
+import checkAuthMiddleware from '../middleware/checkAuth';
 
 const router = express.Router();
-const User = require('../models/User');
-const checkAuthMiddleware = require('../middleware/checkAuth');
 
-router.get('/auth', (req, res) => {
+router.get('/auth', (req: any, res: any) => {
   res.render('user/auth', {
     title: 'Регистрация/Вход',
   });
 });
 
-router.get('/me', checkAuthMiddleware, (req, res) => {
+router.get('/me', checkAuthMiddleware, (req: any, res: any) => {
   res.render('user/me', {
     title: 'Страница пользователя',
     user: req.user,
@@ -19,11 +19,11 @@ router.get('/me', checkAuthMiddleware, (req, res) => {
   });
 });
 
-router.get('/signup', (req, res) => {
+router.get('/signup', (req: any, res: any) => {
   res.render('user/signup_form');
 });
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', async (req: any, res: any) => {
   const { username, password } = req.body;
 
   const newUser = new User({
@@ -40,7 +40,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', (req: any, res: any) => {
   res.render('user/login_form');
 });
 
@@ -52,15 +52,15 @@ router.post(
       failureRedirect: '/user/login',
     },
   ),
-  (req, res) => {
+  (req: any, res: any) => {
     console.log('req.user: ', req.user);
     res.redirect('/');
   },
 );
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (req: any, res: any) => {
   req.logout();
   res.redirect('/');
 });
 
-module.exports = router;
+export default router;

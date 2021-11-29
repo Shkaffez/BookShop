@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const commentSchema = new Schema({
   username: String,
@@ -33,4 +33,4 @@ const bookSchema = new Schema({
   comments: [commentSchema],
 });
 
-module.exports = model('Book', bookSchema);
+export = model('Book', bookSchema);

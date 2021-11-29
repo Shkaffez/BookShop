@@ -1,10 +1,10 @@
-const express = require('express');
-const needle = require('needle');
-const container = require('../container');
+import express from 'express';
+import needle from 'needle';
+import container from '../container';
+import BooksRepository from '../services/BooksRepository';
+import Book from '../models/BookModel';
 
 const router = express.Router();
-const BooksRepository = require('../services/BooksRepository');
-const Book = require('../models/Book');
 
 const COUNTER_HOST = process.env.COUNTER_HOST || 'counter';
 const COUNTER_PORT = process.env.COUNTER_PORT || 3002;
@@ -127,4 +127,4 @@ router.post('/delete/:id', async (req, res) => {
   res.redirect('/book');
 });
 
-module.exports = router;
+export default router;

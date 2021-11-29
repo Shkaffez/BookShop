@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+export default function checkAuthMiddleware(req: any, res: any, next: any) {
   if (!req.isAuthenticated || !req.isAuthenticated()) {
     if (req.session) {
       req.session.returnTo = req.originalUrl || req.url;
@@ -6,4 +6,4 @@ module.exports = (req, res, next) => {
     return res.redirect('/user/auth');
   }
   next();
-};
+}

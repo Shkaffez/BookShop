@@ -1,6 +1,6 @@
-const { injectable } = require('inversify');
+import Book from '../models/BookModel';
 
-const Book = require('../models/Book');
+const { injectable } = require('inversify');
 
 type BookType = {
   title: string,
@@ -20,7 +20,7 @@ interface IBookRepository {
 }
 
 @injectable()
-class BooksRepository implements IBookRepository {
+export default class BooksRepository implements IBookRepository {
   async createBook(book: BookType): Promise<void> {
     const newbook = new Book({ book });
     try {
@@ -66,5 +66,3 @@ class BooksRepository implements IBookRepository {
     }
   }
 }
-
-module.exports = BooksRepository;

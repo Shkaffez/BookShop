@@ -6,11 +6,13 @@
     "node": true
   },
   "extends": [
-    "airbnb-base"
+    "airbnb-base",
+    "airbnb-typescript/base"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": 2021,
+    "project": "./BookShop/tsconfig.json"
   },
   "plugins": [
     "@typescript-eslint"
