@@ -1,26 +1,9 @@
+import { injectable } from 'inversify';
 import Book from '../models/BookModel';
-
-const { injectable } = require('inversify');
-
-type BookType = {
-  title: string,
-  description: string,
-  authors: string,
-  favorite: string,
-  fileCover: string,
-  fileName: string,
-}
-
-interface IBookRepository {
-  createBook(book: BookType): Promise<void>;
-  getBook(id: string): Promise<void | BookType>;
-  getBooks(): Promise<Array<BookType> | void>;
-  updateBook(id: string, book: BookType): Promise<void | BookType>;
-  deleteBook(id: string): Promise<void>;
-}
+import { CreateBookDto, BookType } from '../Interfaces/IBook';
 
 @injectable()
-export default class BooksRepository implements IBookRepository {
+export default class BooksRepository implements CreateBookDto {
   async createBook(book: BookType): Promise<void> {
     const newbook = new Book({ book });
     try {

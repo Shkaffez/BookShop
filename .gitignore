@@ -105,3 +105,4 @@ dist
 
 node-modules
 tsconfig.json
+dist

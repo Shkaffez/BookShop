@@ -2,9 +2,9 @@ import 'reflect-metadata';
 
 import express from 'express';
 import http from 'http';
-import socketIO from 'socket.io';
+import { Server } from 'socket.io';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 
@@ -18,8 +18,10 @@ import bookApiRouter from './routes/api/book';
 import bookRouter from './routes/book';
 import userRouter from './routes/users';
 
+import { CreateUserDto } from './Interfaces/IUser';
+
 function verify(username: any, password: any, done: any) {
-  User.findOne({ username }, (err: any, user: any) => {
+  User.findOne({ username }, (err: Error, user: CreateUserDto) => {
     if (err) { return done(err); }
     if (!user) {
       return done(null, false, { message: 'Incorrect username.' });
@@ -34,7 +36,7 @@ function verify(username: any, password: any, done: any) {
 const options = {
   usernameField: 'username',
   passwordField: 'password',
-  passReqToCallback: false,
+  passReqToCallback: false as false,
 };
 
 passport.use('local', new LocalStrategy(options, verify));
@@ -45,15 +47,15 @@ passport.serializeUser((user, cb) => {
 });
 
 passport.deserializeUser((id, cb) => {
-  User.findById(id, (err, user) => {
+  User.findById(id, (err: Error, user: CreateUserDto) => {
     if (err) { return cb(err); }
     cb(null, user);
   });
 });
 
 const app = express();
-const server = http.Server(app);
-const io = socketIO(server);
+const server = http.createServer(app);
+const io = new Server(server);
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -100,10 +102,10 @@ io.on('connection', async (socket: any) => {
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
-const UserDB = process.env.DB_USERNAME || 'root';
-const PasswordDB = process.env.DB_PASSWORD || 'qwerty12345';
-const NameDB = process.env.DB_NAME || 'books';
-const HostDb = process.env.DB_HOST || 'mongodb://localhost:27017/';
+const UserDB = process.env.DB_USERNAME || 'root' as string;
+const PasswordDB = process.env.DB_PASSWORD || 'qwerty12345' as string;
+const NameDB = process.env.DB_NAME || 'books' as string;
+const HostDb = process.env.DB_HOST || 'mongodb://localhost:27017/' as string;
 
 async function start() {
   try {
@@ -113,7 +115,7 @@ async function start() {
       dbName: NameDB,
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    });
+    } as ConnectOptions);
 
     server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
