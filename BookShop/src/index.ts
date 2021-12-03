@@ -6,7 +6,7 @@ import { Server } from 'socket.io';
 import bodyParser from 'body-parser';
 import mongoose, { ConnectOptions } from 'mongoose';
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as LocalStrategy, IVerifyOptions } from 'passport-local';
 
 import User from './models/UserModel';
 import Book from './models/BookModel';
@@ -20,7 +20,7 @@ import userRouter from './routes/users';
 
 import { CreateUserDto } from './Interfaces/IUser';
 
-function verify(username: any, password: any, done: any) {
+function verify(username: string, password: string, done: (error: any, user?: any, options?: IVerifyOptions) => void) {
   User.findOne({ username }, (err: Error, user: CreateUserDto) => {
     if (err) { return done(err); }
     if (!user) {
@@ -76,7 +76,7 @@ app.use('/book', checkAuthMiddleware, bookRouter);
 app.use('/user', userRouter);
 app.use('/api/book', bookApiRouter);
 
-io.on('connection', async (socket: any) => {
+io.on('connection', async (socket) => {
   const { id } = socket;
   console.log(`Socket connected: ${id}`);
   const { roomName } = socket.handshake.query;
@@ -86,7 +86,7 @@ io.on('connection', async (socket: any) => {
   const comments = await Book.findById(roomName).select('comments');
   socket.emit('commentsHistory', comments);
 
-  socket.on('sendComment', async (msg: any) => {
+  socket.on('sendComment', async (msg: string) => {
     const book = await Book.findById(roomName);
     book.comments.push(msg);
     await book.save();

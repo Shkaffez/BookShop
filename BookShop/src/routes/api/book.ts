@@ -1,14 +1,14 @@
-const express = require('express');
+import express, { Request, Response } from 'express';
 
 const router = express.Router();
 const Book = require('../../models/BookModel');
 
-router.get('/', async (req: any, res: any) => {
+router.get('/', async (req: Request, res: Response) => {
   const books = await Book.find().select('-__v');
   res.json(books);
 });
 
-router.get('/:id', async (req: any, res: any) => {
+router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -20,7 +20,7 @@ router.get('/:id', async (req: any, res: any) => {
   }
 });
 
-router.post('/', async (req: any, res: any) => {
+router.post('/', async (req: Request, res: Response) => {
   const {
     title,
     description,
@@ -48,7 +48,7 @@ router.post('/', async (req: any, res: any) => {
   }
 });
 
-router.put('/:id', async (req: any, res: any) => {
+router.put('/:id', async (req: Request, res: Response) => {
   const {
     title,
     description,
@@ -80,7 +80,7 @@ router.put('/:id', async (req: any, res: any) => {
   }
 });
 
-router.delete('/:id', async (req: any, res: any) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     await Book.deleteOne({ _id: id });

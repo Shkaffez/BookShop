@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import needle from 'needle';
 import container from '../container';
 import BooksRepository from '../services/BooksRepository';
@@ -9,7 +9,7 @@ const router = express.Router();
 const COUNTER_HOST = process.env.COUNTER_HOST || 'counter';
 const COUNTER_PORT = process.env.COUNTER_PORT || 3002;
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   const books = await Book.find().select('-__v');
   res.render('book/index', {
     title: 'Список книг',
@@ -17,14 +17,14 @@ router.get('/', async (req, res) => {
   });
 });
 
-router.get('/create', (req, res) => {
+router.get('/create', (req: Request, res: Response) => {
   res.render('book/create', {
     title: 'Добавить книгу',
     book: {},
   });
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create', async (req: Request, res: Response) => {
   const {
     title,
     description,
@@ -52,7 +52,7 @@ router.post('/create', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     // const book = await Book.findById(id).select('-__v');
@@ -73,7 +73,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/update/:id', async (req, res) => {
+router.get('/update/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const book = await Book.findById(id).select('-__v');
@@ -87,7 +87,7 @@ router.get('/update/:id', async (req, res) => {
   }
 });
 
-router.post('/update/:id', async (req, res) => {
+router.post('/update/:id', async (req: Request, res: Response) => {
   const {
     title,
     description,
@@ -114,7 +114,7 @@ router.post('/update/:id', async (req, res) => {
   res.redirect(`/book/${id}`);
 });
 
-router.post('/delete/:id', async (req, res) => {
+router.post('/delete/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
