@@ -54,8 +54,7 @@ router.post('/create', async (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
-    // const book = await Book.findById(id).select('-__v');
+  try {    
     const repo = container.get(BooksRepository);
     const book = await repo.getBook(id);
 
