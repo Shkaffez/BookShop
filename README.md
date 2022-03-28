@@ -14,6 +14,13 @@
   <img src="https://img.shields.io/badge/-Redis-critical">
 </p>
 
+Приложение состоит из основной бизнес логики [Папка BookShop](https://github.com/Shkaffez/BookShop/tree/module2_1_4/BookShop)
+разделенной на модели данных, роуты, сервисы и view. Для уменьшения связности кода используется IoC контейнер.
+
+И [Counter](https://github.com/Shkaffez/BookShop/tree/module2_1_4/Counter) на Redis, реализующего подсчет просмотров книги.
+
+Сервисы запускаются через Docker-compose.
+
 ## Запуск проекта
 Для запуска проекта нужно выполнить комаду
 `docker-compose up`
